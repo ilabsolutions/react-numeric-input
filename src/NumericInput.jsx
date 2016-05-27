@@ -1,5 +1,4 @@
 import React from "react";
-
 const PropTypes = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
@@ -497,6 +496,7 @@ export class NumericInput extends React.Component
      */
     _format(n: number): string
     {
+
         let _n = this._toNumber(n).toFixed(this.props.precision);
 
         if (this.props.format) {
@@ -529,8 +529,17 @@ export class NumericInput extends React.Component
     _onChange(e: Event): void
     {
         this.setState({
-            value: this._parse(e.target.value)
+            // value: this._parse(e.target.value)
+            value: e.target.value
         })
+    }
+
+    _onBlur(e: Event): void
+    {
+      let val = this._format(this._parse(e.target.value))
+      this.setState({
+        value: val
+      })
     }
 
     /**
@@ -855,11 +864,12 @@ export class NumericInput extends React.Component
                         this._invokeEventCallback("onFocus", ...args)
                     });
                 },
-                onBlur: (...args) => {
-                    this.setState({ inputFocus: false }, () => {
-                        this._invokeEventCallback("onBlur", ...args)
-                    });
-                }
+                // onBlur: (...args) => {
+                //     this.setState({ inputFocus: false }, () => {
+                //         this._invokeEventCallback("onBlur", ...args)
+                //     });
+                // }
+                onBlur: this._onBlur.bind(this)
             });
         }
         else {

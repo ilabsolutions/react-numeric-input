@@ -56,14 +56,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	exports.NumericInput = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -120,10 +120,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * step timer. Then define all the private methods within the constructor.
 	     */
 
+
 	    /**
 	     * When click and hold on a button - the speed of auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
+
 
 	    /**
 	     * The deault behaviour is to start from 0, use step of 1 and display
@@ -163,6 +165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *     3. Then parse it to number (delegating to this.props.parse if any)
 	     */
 
+
 	    /**
 	     * When click and hold on a button - the delay before auto changin the value.
 	     * This is a static property and can be modified if needed.
@@ -170,11 +173,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    //,
 	    // noValidate: false
 
+
 	    /**
 	     * This are the default styles that act as base for all the component
 	     * instances. One can modify this object to change the default styles
 	     * of all the widgets on the page.
 	     */
+
 
 	    _createClass(NumericInput, [{
 	        key: "componentWillReceiveProps",
@@ -268,7 +273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -377,6 +382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_format",
 	        value: function _format(n) {
+
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
 
 	            if (this.props.format) {
@@ -411,7 +417,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "_onChange",
 	        value: function _onChange(e) {
 	            this.setState({
-	                value: this._parse(e.target.value)
+	                // value: this._parse(e.target.value)
+	                value: e.target.value
+	            });
+	        }
+	    }, {
+	        key: "_onBlur",
+	        value: function _onBlur(e) {
+	            var val = this._format(this._parse(e.target.value));
+	            this.setState({
+	                value: val
 	            });
 	        }
 
@@ -747,15 +762,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
 	                    },
-	                    onBlur: function onBlur() {
-	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	                            args[_key6] = arguments[_key6];
-	                        }
-
-	                        _this6.setState({ inputFocus: false }, function () {
-	                            _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
-	                        });
-	                    }
+	                    // onBlur: (...args) => {
+	                    //     this.setState({ inputFocus: false }, () => {
+	                    //         this._invokeEventCallback("onBlur", ...args)
+	                    //     });
+	                    // }
+	                    onBlur: this._onBlur.bind(this)
 	                });
 	            } else {
 	                Object.assign(attrs.input.style, css['input:disabled']);

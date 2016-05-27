@@ -47,14 +47,14 @@ module.exports =
 
 	"use strict";
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 	exports.NumericInput = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -178,7 +178,7 @@ module.exports =
 	    }, {
 	        key: "checkValidity",
 	        value: function checkValidity() {
-	            var valid = undefined,
+	            var valid = void 0,
 	                validationError = "";
 
 	            var supportsValidation = !!this.refs.input.checkValidity;
@@ -253,6 +253,7 @@ module.exports =
 	    }, {
 	        key: "_format",
 	        value: function _format(n) {
+
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
 
 	            if (this.props.format) {
@@ -274,7 +275,15 @@ module.exports =
 	        key: "_onChange",
 	        value: function _onChange(e) {
 	            this.setState({
-	                value: this._parse(e.target.value)
+	                value: e.target.value
+	            });
+	        }
+	    }, {
+	        key: "_onBlur",
+	        value: function _onBlur(e) {
+	            var val = this._format(this._parse(e.target.value));
+	            this.setState({
+	                value: val
 	            });
 	        }
 	    }, {
@@ -554,15 +563,8 @@ module.exports =
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
 	                    },
-	                    onBlur: function onBlur() {
-	                        for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-	                            args[_key6] = arguments[_key6];
-	                        }
 
-	                        _this6.setState({ inputFocus: false }, function () {
-	                            _this6._invokeEventCallback.apply(_this6, ["onBlur"].concat(args));
-	                        });
-	                    }
+	                    onBlur: this._onBlur.bind(this)
 	                });
 	            } else {
 	                Object.assign(attrs.input.style, css['input:disabled']);
