@@ -389,6 +389,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return this.props.format(_n);
 	            }
 
+	            console.log("formatted: " + _n);
+
 	            return _n;
 	        }
 
@@ -416,6 +418,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_onChange",
 	        value: function _onChange(e) {
+	            console.log("changed value: " + e.target.value);
 	            this.setState({
 	                // value: this._parse(e.target.value)
 	                value: e.target.value
@@ -425,6 +428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "_onBlur",
 	        value: function _onBlur(e) {
 	            var val = this._format(this._parse(e.target.value));
+	            console.log("value: " + val);
 	            this.setState({
 	                value: val
 	            });

@@ -503,6 +503,8 @@ export class NumericInput extends React.Component
             return this.props.format(_n);
         }
 
+        console.log(`formatted: ${_n}`)
+
         return _n;
     }
 
@@ -528,6 +530,7 @@ export class NumericInput extends React.Component
      */
     _onChange(e: Event): void
     {
+        console.log(`changed value: ${e.target.value}`)
         this.setState({
             // value: this._parse(e.target.value)
             value: e.target.value
@@ -537,6 +540,7 @@ export class NumericInput extends React.Component
     _onBlur(e: Event): void
     {
       let val = this._format(this._parse(e.target.value))
+      console.log(`value: ${val}`)
       this.setState({
         value: val
       })

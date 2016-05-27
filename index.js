@@ -260,6 +260,8 @@ module.exports =
 	                return this.props.format(_n);
 	            }
 
+	            console.log("formatted: " + _n);
+
 	            return _n;
 	        }
 	    }, {
@@ -274,6 +276,7 @@ module.exports =
 	    }, {
 	        key: "_onChange",
 	        value: function _onChange(e) {
+	            console.log("changed value: " + e.target.value);
 	            this.setState({
 	                value: e.target.value
 	            });
@@ -282,6 +285,7 @@ module.exports =
 	        key: "_onBlur",
 	        value: function _onBlur(e) {
 	            var val = this._format(this._parse(e.target.value));
+	            console.log("value: " + val);
 	            this.setState({
 	                value: val
 	            });
