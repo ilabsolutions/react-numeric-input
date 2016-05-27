@@ -457,7 +457,7 @@ module.exports =
 	            };
 
 	            if (state.value || state.value === 0) {
-	                attrs.input.value = this._format(state.value);
+	                attrs.input.value = state.value;
 	            }
 
 	            if (hasFormControl) {
