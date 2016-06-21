@@ -1,7 +1,8 @@
 import React from "react";
-const PropTypes = React.PropTypes
+const PropTypes    = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
+const IS_BROWSER   = typeof document != 'undefined';
 
 /**
  * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -35,7 +36,7 @@ function removeClass(element, className) {
     }
 }
 
-export class NumericInput extends React.Component
+class NumericInput extends React.Component
 {
     static propTypes = {
         step         : PropTypes.number,
@@ -50,7 +51,7 @@ export class NumericInput extends React.Component
         readOnly     : PropTypes.bool,
         required     : PropTypes.bool,
         noValidate   : PropTypes.oneOfType([ PropTypes.bool, PropTypes.string ]),
-        style        : PropTypes.object,
+        style        : PropTypes.oneOfType([ PropTypes.object, PropTypes.bool ]),
         type         : PropTypes.string,
         pattern      : PropTypes.string,
         onFocus      : PropTypes.func,
@@ -342,7 +343,7 @@ export class NumericInput extends React.Component
 
         // This is a special case! If the component has the "autoFocus" prop
         // and the browser did focus it we have pass that to the onFocus
-        if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+        if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
             this.state.inputFocus = true
         }
 
@@ -551,6 +552,7 @@ export class NumericInput extends React.Component
      */
     _onKeyDown(...args): void
     {
+        args[0].persist()
         this._invokeEventCallback("onKeyDown", ...args)
         let e = args[0]
         if (!e.isDefaultPrevented()) {
@@ -567,6 +569,7 @@ export class NumericInput extends React.Component
 
     _onSelectionChange(e): void
     {
+        e.persist()
         this.setState({
             selectionStart: this.refs.input.selectionStart,
             selectionEnd: this.refs.input.selectionEnd
@@ -597,7 +600,7 @@ export class NumericInput extends React.Component
     stop(): void
     {
         if ( this._timer ) {
-            window.clearTimeout( this._timer );
+            clearTimeout( this._timer );
         }
     }
 
@@ -688,30 +691,30 @@ export class NumericInput extends React.Component
         let state = this.state
         let css   = {}
 
+        let {
+            // These are ignored in rendering
+            step, min, max, precision, parse, format,
+            value, type, style, defaultValue, onInvalid, onValid,
+
+            // The rest are passed to the input
+            ...rest
+        } = this.props;
+
         // Build the styles
         for (let x in NumericInput.style) {
             css[x] = Object.assign(
                 {},
                 NumericInput.style[x],
-                props.style ? props.style[x] || {} : {}
+                style ? style[x] || {} : {}
             );
         }
-
-        let {
-            // These are ignored in rendering
-            step, min, max, precision, parse, format,
-            value, type, style, defaultValue,
-
-            // The rest are passed to the input
-            ...rest
-        } = this.props;
 
         let hasFormControl = props.className && (/\bform-control\b/).test(
             props.className
         )
 
         let mobile = props.mobile == 'auto' ?
-            'ontouchstart' in document :
+            IS_BROWSER && 'ontouchstart' in document :
             props.mobile
         if (typeof mobile == "function") {
             mobile = mobile.call(this)
@@ -720,14 +723,14 @@ export class NumericInput extends React.Component
 
         let attrs = {
             wrap : {
-                style    : css.wrap,
+                style    : style === false ? null : css.wrap,
                 className: 'react-numeric-input',
                 ref      : 'wrapper'
             },
             input : {
                 ref: 'input',
                 type: 'text',
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.input,
                     !hasFormControl ?
@@ -738,7 +741,7 @@ export class NumericInput extends React.Component
                 ...rest
             },
             btnUp: {
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnUp,
@@ -752,7 +755,7 @@ export class NumericInput extends React.Component
                 )
             },
             btnDown: {
-                style: Object.assign(
+                style: style === false ? null : Object.assign(
                     {},
                     css.btn,
                     css.btnDown,
@@ -769,15 +772,16 @@ export class NumericInput extends React.Component
 
         if (state.value || state.value === 0) {
             // attrs.input.value = this._format(state.value)
-            attrs.input.value = state.value
+        } else {
+            attrs.input.value = ""
         }
 
-        if (hasFormControl) {
+        if (hasFormControl && style !== false) {
             Object.assign(attrs.wrap.style, css['wrap.hasFormControl'])
         }
 
         // mobile
-        if (mobile) {
+        if (mobile && style !== false) {
             Object.assign(attrs.input  .style, css['input.mobile'  ])
             Object.assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
             Object.assign(attrs.btnDown.style, css['btnDown.mobile'])
@@ -813,6 +817,7 @@ export class NumericInput extends React.Component
                 },
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
+                    args[0].persist();
                     this.setState({
                         btnUpHover  : true,
                         btnUpActive : true,
@@ -847,6 +852,7 @@ export class NumericInput extends React.Component
                 },
                 onMouseDown: (...args) => {
                     args[0].preventDefault();
+                    args[0].persist();
                     this.setState({
                         btnDownHover  : true,
                         btnDownActive : true,
@@ -865,12 +871,13 @@ export class NumericInput extends React.Component
                 onSelect: this._onSelectionChange.bind(this),
                 onSelectStart: this._onSelectionChange.bind(this),
                 onFocus: (...args) => {
+                    args[0].persist();
                     this.setState({ inputFocus: true }, () => {
                         this._invokeEventCallback("onFocus", ...args)
                     });
                 },
                 // onBlur: (...args) => {
-                //     this.setState({ inputFocus: false }, () => {
+                //    args[0].persist();
                 //         this._invokeEventCallback("onBlur", ...args)
                 //     });
                 // }
@@ -878,7 +885,9 @@ export class NumericInput extends React.Component
             });
         }
         else {
-            Object.assign(attrs.input.style, css['input:disabled'])
+            if (style !== false) {
+                Object.assign(attrs.input.style, css['input:disabled'])
+            }
         }
 
         if (mobile) {
@@ -886,11 +895,11 @@ export class NumericInput extends React.Component
                 <span {...attrs.wrap}>
                     <input {...attrs.input}/>
                     <b {...attrs.btnUp}>
-                        <i style={css.minus}/>
-                        <i style={css.plus}/>
+                        <i style={ style === false ? null : css.minus }/>
+                        <i style={ style === false ? null : css.plus }/>
                     </b>
                     <b {...attrs.btnDown}>
-                        <i style={css.minus}/>
+                        <i style={ style === false ? null : css.minus }/>
                     </b>
                 </span>
             )
@@ -900,14 +909,14 @@ export class NumericInput extends React.Component
             <span {...attrs.wrap}>
                 <input {...attrs.input}/>
                 <b {...attrs.btnUp}>
-                    <i style={css.arrowUp}/>
+                    <i style={ style === false ? null : css.arrowUp }/>
                 </b>
                 <b {...attrs.btnDown}>
-                    <i style={css.arrowDown}/>
+                    <i style={ style === false ? null : css.arrowDown }/>
                 </b>
             </span>
         );
     }
 }
 
-export default NumericInput
+module.exports = NumericInput;

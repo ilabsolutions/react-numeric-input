@@ -3,14 +3,15 @@ module.exports = {
     output: {
         path         : "./dist",
         filename     : "react-numeric-input.js",
-        libraryTarget: "umd"
+        libraryTarget: "umd",
+        library      : "NumericInput"
     },
     module: {
         loaders: [
             {
                 test: /\.jsx$/,
                 loaders: [
-                    "babel?presets[]=es2015&presets[]=stage-0&presets[]=react"
+                    "babel?presets[]=es2015&presets[]=stage-0&presets[]=react&plugins[]=transform-object-assign"
                 ],
                 exclude: /node_modules/
             }

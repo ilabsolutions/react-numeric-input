@@ -34,8 +34,8 @@
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-with-addons.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-with-addons.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
         <script src="../dist/react-numeric-input.js"></script>
     </head>
@@ -66,6 +66,20 @@
                     <div class="code jsx">&lt;NumericInput className="form-control"/&gt;</div>
                     <div class="col-sm-5 col-md-4 col-lg-3">
                         <script class="jsx" type="text/plain">{"className": "form-control"}</script>
+                    </div>
+                </blockquote>
+            </fieldset>
+
+            <fieldset>
+                <legend class="text-success">With inline styles disabled</legend>
+                <p>
+                    You can use <code>style={ false }</code> to disable the
+                    inline styles. It's up to you to provide your own CSS in this case.
+                </p>
+                <blockquote>
+                    <div class="code jsx">&lt;NumericInput className="form-control" style={ false }/&gt;</div>
+                    <div class="col-sm-5 col-md-4 col-lg-3">
+                        <script class="jsx" type="text/plain">{"className": "form-control", "style": false }</script>
                     </div>
                 </blockquote>
             </fieldset>

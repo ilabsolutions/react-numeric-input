@@ -1,6 +1,6 @@
 {
   "name": "react-numeric-input",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Number input component that can replace the native number input which is not yet very well supported and where it is, it does not have the same appearance across the browsers. Additionally this component offers more flexible options and can be used for any values (differently formatted representations of the internal numeric value).",
   "main": "index.js",
   "scripts": {
@@ -34,6 +34,7 @@
     "babel-core": "^6.4.5",
     "babel-eslint": "^4.1.6",
     "babel-loader": "^6.2.1",
+    "babel-plugin-transform-object-assign": "^6.8.0",
     "babel-plugin-transform-runtime": "^6.4.3",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
@@ -48,14 +49,14 @@
     "karma-mocha": "^0.2.0",
     "karma-opera-launcher": "^0.3.0",
     "karma-phantomjs-launcher": "^0.2.1",
-    "karma-safari-launcher": "^0.1.1",
+    "karma-safari-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.6",
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
-    "react-addons-test-utils": "^0.14.6",
-    "webpack": "^1.12.2",
-    "react": "^0.14.6",
-    "react-dom": "^0.14.6"
+    "react": "^15.1.0",
+    "react-addons-test-utils": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "webpack": "^1.12.2"
   }
 }

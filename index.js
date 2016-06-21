@@ -47,11 +47,6 @@ module.exports =
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.NumericInput = undefined;
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -73,6 +68,7 @@ module.exports =
 	var PropTypes = _react2.default.PropTypes;
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
+	var IS_BROWSER = typeof document != 'undefined';
 
 	function addClass(element, className) {
 	    if (element.classList) {
@@ -93,7 +89,7 @@ module.exports =
 	    }
 	}
 
-	var NumericInput = exports.NumericInput = function (_React$Component) {
+	var NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
 	    function NumericInput(props) {
@@ -147,7 +143,7 @@ module.exports =
 	                }
 	            }
 
-	            if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
 	            }
 
@@ -297,6 +293,7 @@ module.exports =
 	                args[_key] = arguments[_key];
 	            }
 
+	            args[0].persist();
 	            this._invokeEventCallback.apply(this, ["onKeyDown"].concat(args));
 	            var e = args[0];
 	            if (!e.isDefaultPrevented()) {
@@ -314,6 +311,7 @@ module.exports =
 	        value: function _onSelectionChange(e) {
 	            var _this3 = this;
 
+	            e.persist();
 	            this.setState({
 	                selectionStart: this.refs.input.selectionStart,
 	                selectionEnd: this.refs.input.selectionEnd
@@ -341,7 +339,7 @@ module.exports =
 	        key: "stop",
 	        value: function stop() {
 	            if (this._timer) {
-	                window.clearTimeout(this._timer);
+	                clearTimeout(this._timer);
 	            }
 	        }
 	    }, {
@@ -411,10 +409,6 @@ module.exports =
 	            var state = this.state;
 	            var css = {};
 
-	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
-	            }
-
 	            var _props = this.props;
 	            var step = _props.step;
 	            var min = _props.min;
@@ -426,12 +420,18 @@ module.exports =
 	            var type = _props.type;
 	            var style = _props.style;
 	            var defaultValue = _props.defaultValue;
+	            var onInvalid = _props.onInvalid;
+	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue"]);
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+
+	            for (var x in NumericInput.style) {
+	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
+	            }
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? 'ontouchstart' in document : props.mobile;
+	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }
@@ -439,44 +439,46 @@ module.exports =
 
 	            var attrs = {
 	                wrap: {
-	                    style: css.wrap,
+	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
 	                    ref: 'wrapper'
 	                },
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
 	            if (state.value || state.value === 0) {
 	                attrs.input.value = state.value;
+	            } else {
+	                attrs.input.value = "";
 	            }
 
-	            if (hasFormControl) {
-	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
+	            if (hasFormControl && style !== false) {
+	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
-	            if (mobile) {
-	                Object.assign(attrs.input.style, css['input.mobile']);
-	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
+	            if (mobile && style !== false) {
+	                _extends(attrs.input.style, css['input.mobile']);
+	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
+	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            if (!props.disabled) {
-	                Object.assign(attrs.wrap, {
+	                _extends(attrs.wrap, {
 	                    onMouseUp: this.stop,
 	                    onMouseLeave: this.stop
 	                });
 
-	                Object.assign(attrs.btnUp, {
+	                _extends(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -503,6 +505,7 @@ module.exports =
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
@@ -514,7 +517,7 @@ module.exports =
 	                    }
 	                });
 
-	                Object.assign(attrs.btnDown, {
+	                _extends(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -541,6 +544,7 @@ module.exports =
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
@@ -552,7 +556,7 @@ module.exports =
 	                    }
 	                });
 
-	                Object.assign(attrs.input, {
+	                _extends(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
@@ -563,15 +567,18 @@ module.exports =
 	                            args[_key5] = arguments[_key5];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: true }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
 	                    },
 
-	                    onBlur: this._onBlur.bind(this)
+	                        //args[0].persist();
 	                });
 	            } else {
-	                Object.assign(attrs.input.style, css['input:disabled']);
+	                if (style !== false) {
+	                    _extends(attrs.input.style, css['input:disabled']);
+	                }
 	            }
 
 	            if (mobile) {
@@ -582,13 +589,13 @@ module.exports =
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnUp,
-	                        _react2.default.createElement("i", { style: css.minus }),
-	                        _react2.default.createElement("i", { style: css.plus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus }),
+	                        _react2.default.createElement("i", { style: style === false ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnDown,
-	                        _react2.default.createElement("i", { style: css.minus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus })
 	                    )
 	                );
 	            }
@@ -600,12 +607,12 @@ module.exports =
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnUp,
-	                    _react2.default.createElement("i", { style: css.arrowUp })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnDown,
-	                    _react2.default.createElement("i", { style: css.arrowDown })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -627,7 +634,7 @@ module.exports =
 	    readOnly: PropTypes.bool,
 	    required: PropTypes.bool,
 	    noValidate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-	    style: PropTypes.object,
+	    style: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 	    type: PropTypes.string,
 	    pattern: PropTypes.string,
 	    onFocus: PropTypes.func,
@@ -803,7 +810,9 @@ module.exports =
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
-	exports.default = NumericInput;
+
+
+	module.exports = NumericInput;
 
 /***/ },
 /* 1 */

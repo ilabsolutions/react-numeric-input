@@ -3,10 +3,10 @@
 		module.exports = factory(require("React"));
 	else if(typeof define === 'function' && define.amd)
 		define(["React"], factory);
-	else {
-		var a = typeof exports === 'object' ? factory(require("React")) : factory(root["React"]);
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
+	else if(typeof exports === 'object')
+		exports["NumericInput"] = factory(require("React"));
+	else
+		root["NumericInput"] = factory(root["React"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -56,11 +56,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.NumericInput = undefined;
-
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -82,6 +77,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PropTypes = _react2.default.PropTypes;
 	var KEYCODE_UP = 38;
 	var KEYCODE_DOWN = 40;
+	var IS_BROWSER = typeof document != 'undefined';
 
 	/**
 	 * Just a simple helper to provide support for older IEs. This is not exactly a
@@ -112,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	}
 
-	var NumericInput = exports.NumericInput = function (_React$Component) {
+	var NumericInput = function (_React$Component) {
 	    _inherits(NumericInput, _React$Component);
 
 	    /**
@@ -225,7 +221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // This is a special case! If the component has the "autoFocus" prop
 	            // and the browser did focus it we have pass that to the onFocus
-	            if (!this.state.inputFocus && document.activeElement === this.refs.input) {
+	            if (!this.state.inputFocus && IS_BROWSER && document.activeElement === this.refs.input) {
 	                this.state.inputFocus = true;
 	            }
 
@@ -445,6 +441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                args[_key] = arguments[_key];
 	            }
 
+	            args[0].persist();
 	            this._invokeEventCallback.apply(this, ["onKeyDown"].concat(args));
 	            var e = args[0];
 	            if (!e.isDefaultPrevented()) {
@@ -462,6 +459,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _onSelectionChange(e) {
 	            var _this3 = this;
 
+	            e.persist();
 	            this.setState({
 	                selectionStart: this.refs.input.selectionStart,
 	                selectionEnd: this.refs.input.selectionEnd
@@ -494,7 +492,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "stop",
 	        value: function stop() {
 	            if (this._timer) {
-	                window.clearTimeout(this._timer);
+	                clearTimeout(this._timer);
 	            }
 	        }
 
@@ -605,11 +603,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var state = this.state;
 	            var css = {};
 
-	            // Build the styles
-	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
-	            }
-
 	            var _props = this.props;
 	            var
 	            // These are ignored in rendering
@@ -623,12 +616,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var type = _props.type;
 	            var style = _props.style;
 	            var defaultValue = _props.defaultValue;
+	            var onInvalid = _props.onInvalid;
+	            var onValid = _props.onValid;
 
-	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue"]);
+	            var rest = _objectWithoutProperties(_props, ["step", "min", "max", "precision", "parse", "format", "value", "type", "style", "defaultValue", "onInvalid", "onValid"]);
+
+	            // Build the styles
+
+
+	            for (var x in NumericInput.style) {
+	                css[x] = _extends({}, NumericInput.style[x], style ? style[x] || {} : {});
+	            }
 
 	            var hasFormControl = props.className && /\bform-control\b/.test(props.className);
 
-	            var mobile = props.mobile == 'auto' ? 'ontouchstart' in document : props.mobile;
+	            var mobile = props.mobile == 'auto' ? IS_BROWSER && 'ontouchstart' in document : props.mobile;
 	            if (typeof mobile == "function") {
 	                mobile = mobile.call(this);
 	            }
@@ -636,47 +638,48 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            var attrs = {
 	                wrap: {
-	                    style: css.wrap,
+	                    style: style === false ? null : css.wrap,
 	                    className: 'react-numeric-input',
 	                    ref: 'wrapper'
 	                },
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: style === false ? null : _extends({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: style === false ? null : _extends({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
 	            if (state.value || state.value === 0) {
 	                // attrs.input.value = this._format(state.value)
-	                attrs.input.value = state.value;
+	            } else {
+	                attrs.input.value = "";
 	            }
 
-	            if (hasFormControl) {
-	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
+	            if (hasFormControl && style !== false) {
+	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            // mobile
-	            if (mobile) {
-	                Object.assign(attrs.input.style, css['input.mobile']);
-	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
+	            if (mobile && style !== false) {
+	                _extends(attrs.input.style, css['input.mobile']);
+	                _extends(attrs.btnUp.style, css['btnUp.mobile']);
+	                _extends(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            // Attach event listeners if the widget is not disabled
 	            if (!props.disabled) {
-	                Object.assign(attrs.wrap, {
+	                _extends(attrs.wrap, {
 	                    onMouseUp: this.stop,
 	                    onMouseLeave: this.stop
 	                });
 
-	                Object.assign(attrs.btnUp, {
+	                _extends(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -703,6 +706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnUpHover: true,
 	                            btnUpActive: true,
@@ -714,7 +718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.btnDown, {
+	                _extends(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -741,6 +745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 
 	                        args[0].preventDefault();
+	                        args[0].persist();
 	                        _this6.setState({
 	                            btnDownHover: true,
 	                            btnDownActive: true,
@@ -752,7 +757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.input, {
+	                _extends(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
@@ -763,6 +768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            args[_key5] = arguments[_key5];
 	                        }
 
+	                        args[0].persist();
 	                        _this6.setState({ inputFocus: true }, function () {
 	                            _this6._invokeEventCallback.apply(_this6, ["onFocus"].concat(args));
 	                        });
@@ -772,10 +778,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    //         this._invokeEventCallback("onBlur", ...args)
 	                    //     });
 	                    // }
-	                    onBlur: this._onBlur.bind(this)
+	                    //    args[0].persist();
 	                });
 	            } else {
-	                Object.assign(attrs.input.style, css['input:disabled']);
+	                if (style !== false) {
+	                    _extends(attrs.input.style, css['input:disabled']);
+	                }
 	            }
 
 	            if (mobile) {
@@ -786,13 +794,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnUp,
-	                        _react2.default.createElement("i", { style: css.minus }),
-	                        _react2.default.createElement("i", { style: css.plus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus }),
+	                        _react2.default.createElement("i", { style: style === false ? null : css.plus })
 	                    ),
 	                    _react2.default.createElement(
 	                        "b",
 	                        attrs.btnDown,
-	                        _react2.default.createElement("i", { style: css.minus })
+	                        _react2.default.createElement("i", { style: style === false ? null : css.minus })
 	                    )
 	                );
 	            }
@@ -804,12 +812,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnUp,
-	                    _react2.default.createElement("i", { style: css.arrowUp })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowUp })
 	                ),
 	                _react2.default.createElement(
 	                    "b",
 	                    attrs.btnDown,
-	                    _react2.default.createElement("i", { style: css.arrowDown })
+	                    _react2.default.createElement("i", { style: style === false ? null : css.arrowDown })
 	                )
 	            );
 	        }
@@ -831,7 +839,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    readOnly: PropTypes.bool,
 	    required: PropTypes.bool,
 	    noValidate: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-	    style: PropTypes.object,
+	    style: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 	    type: PropTypes.string,
 	    pattern: PropTypes.string,
 	    onFocus: PropTypes.func,
@@ -1017,7 +1025,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	NumericInput.SPEED = 50;
 	NumericInput.DELAY = 500;
-	exports.default = NumericInput;
+
+
+	module.exports = NumericInput;
 
 /***/ },
 /* 1 */

@@ -12,7 +12,7 @@ function testProp(cfg) {
             let result = cfg.getValue(app)
             expect(result).toEqual(
                 entry.out,
-                `If the "${cfg.propName}" is set to ${entry.in} the result
+                `If the "${cfg.propName}" is set to "${String(entry.in)}" the result
                 should be "${entry.out}" but got "${result}"`
             )
             resolve()
@@ -235,5 +235,33 @@ describe('NumericInput', () => {
         .then(() => done())
 
         .catch(done)
-    })
+    });
+
+    it('can disable inline styles', done => {
+        let app = TestUtils.renderIntoDocument(<NumericInput style={false} />);
+
+        function walk(el, visitor) {
+            visitor(el);
+            if (el.childNodes) {
+                for (let i = 0, l = el.childNodes.length; i < l; i++) {
+                    let child = el.childNodes[i]
+                    if (child.nodeType === 1) {
+                        walk(child, visitor)
+                    }
+                }
+            }
+        }
+
+        walk(app.refs.wrapper, el => {
+            expect(!el.getAttribute('style')).toEqual(true);
+        });
+
+        app = TestUtils.renderIntoDocument(<NumericInput style={false} mobile />);
+
+        walk(app.refs.wrapper, el => {
+            expect(!el.getAttribute('style')).toEqual(true);
+        });
+
+        done();
+    });
 })

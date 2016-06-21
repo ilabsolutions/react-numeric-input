@@ -8,7 +8,7 @@ the browsers. Additionally this component offers more flexible options and can
 be used for any values (differently formatted representations of the internal
 numeric value).
 
-[Live demo](http://vlad-ignatov.github.io/react-numeric-input/examples/v2.0.3/index.html)
+[Live demo](http://vlad-ignatov.github.io/react-numeric-input/examples/v2.0.4/index.html)
 
 ## Installation
 ```sh
@@ -70,7 +70,7 @@ Name         | Type                                | Default
 **className**|`string`                             | none
 **disabled** |`boolean`                            | none
 **readOnly** |`boolean`                            | none
-**style**    |`object`                             | none
+**style**    |`object` or `false`                  | none
 **size**     |`number` or `string`                 | none
 **mobile**   |`true`, `false`, 'auto' or `function`|`auto`
 
@@ -109,7 +109,8 @@ NumericInput.style.input.color = 'red';
 Finally, you can still use CSS if you want. Each component's root element has the
 `react-numeric-input` class so that it is easy to find these widgets on the page. However,
 keep in mind that because of the inline styles you might need to use `!important` for some
-rules. Example:
+rules unless you pass `style={false}` which will disable the inline styles and you will
+have to provide your own CSS styles for everything. Example:
 ```css
 .react-numeric-input input {
 	color: red;
@@ -126,15 +127,15 @@ rules. Example:
 This component aims to provide good integration not only with React but with any third party script
 that might want to work with it on the current page.
 
-### valueAsNumber
+### getValueAsNumber()
 The native number inputs have special property called `valueAsNumber`. It provides access to the
 value as number to be used by scripts. In this react component this becomes even more desirable as
 the display value might be formatted and have nothing in common with the underlying value meaning
 that one might need to call parse to find out what the numeric value is. For that reason this
-component exposes `_valueAsNumber` property on the input element. Note the underscore in front -
-the `valueAsNumber` is readonly and not even accessible on input[type="text"]. Also keep in mind
-that this really is a number (float) so it might be different from the displayed value. For
-example an input showing "12.30" will have `_valueAsNumber` of `12.3`.
+component exposes `getValueAsNumber()` method on the input element. Also keep in mind
+that this really returns a number (float) so it might be different from the displayed value. For
+example an input showing "12.30" will have `getValueAsNumber()` returning `12.3` and if the input
+is empty the result would be `0`.
 
 ### setValue()
 An external script that does not "understand" React can still work with this component by reading
