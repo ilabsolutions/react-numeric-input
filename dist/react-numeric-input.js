@@ -658,8 +658,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (state.value || state.value === 0) {
 	                // attrs.input.value = this._format(state.value)
 	            } else {
-	                attrs.input.value = "";
-	            }
+	                    attrs.input.value = "";
+	                }
 
 	            if (hasFormControl && style !== false) {
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
@@ -774,11 +774,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        });
 	                    },
 	                    // onBlur: (...args) => {
-	                    //     this.setState({ inputFocus: false }, () => {
+	                    //    args[0].persist();
 	                    //         this._invokeEventCallback("onBlur", ...args)
 	                    //     });
 	                    // }
-	                    //    args[0].persist();
+	                    onBlur: this._onBlur.bind(this)
 	                });
 	            } else {
 	                if (style !== false) {

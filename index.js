@@ -456,11 +456,9 @@ module.exports =
 	                }
 	            };
 
-	            if (state.value || state.value === 0) {
-	                attrs.input.value = state.value;
-	            } else {
-	                attrs.input.value = "";
-	            }
+	            if (state.value || state.value === 0) {} else {
+	                    attrs.input.value = "";
+	                }
 
 	            if (hasFormControl && style !== false) {
 	                _extends(attrs.wrap.style, css['wrap.hasFormControl']);
@@ -573,7 +571,7 @@ module.exports =
 	                        });
 	                    },
 
-	                        //args[0].persist();
+	                    onBlur: this._onBlur.bind(this)
 	                });
 	            } else {
 	                if (style !== false) {
