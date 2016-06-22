@@ -210,7 +210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Notify about the focus
 	            if (this.state.inputFocus && !prevState.inputFocus) {
-	                this.refs.input.focus();
+	                this.refs.input.getDOMNode().focus();
 
 	                // Restore selectionStart (if any)
 	                if (this.state.selectionStart || this.state.selectionStart === 0) {

@@ -136,7 +136,7 @@ module.exports =
 	            }
 
 	            if (this.state.inputFocus && !prevState.inputFocus) {
-	                this.refs.input.focus();
+	                this.refs.input.getDOMNode().focus();
 
 	                if (this.state.selectionStart || this.state.selectionStart === 0) {
 	                    this.refs.input.selectionStart = this.state.selectionStart;
