@@ -382,15 +382,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_format",
 	        value: function _format(n) {
-
 	            var _n = this._toNumber(n).toFixed(this.props.precision);
-
 	            if (this.props.format) {
 	                return this.props.format(_n);
 	            }
-
-	            console.log("formatted: " + _n);
-
 	            return _n;
 	        }
 
@@ -402,9 +397,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_step",
 	        value: function _step(n, callback) {
-	            var _n = this._toNumber((this.state.value || 0) + this.props.step * n);
+	            this.refs.input.getDOMNode().focus();
+	            var _current = isNaN(this.state.value) ? this._parse(this.state.value) : this.state.value;
+	            var _n = this._toNumber((_current || 0) + this.props.step * n);
 
-	            if (_n !== this.state.value) {
+	            if (_n !== _current) {
 	                this.setState({ value: _n }, callback);
 	            }
 	        }
@@ -418,7 +415,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_onChange",
 	        value: function _onChange(e) {
-	            console.log("changed value: " + e.target.value);
 	            this.setState({
 	                // value: this._parse(e.target.value)
 	                value: e.target.value
@@ -428,7 +424,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "_onBlur",
 	        value: function _onBlur(e) {
 	            var val = this._format(this._parse(e.target.value));
-	            console.log("value: " + val);
 	            this.setState({
 	                value: val
 	            });

@@ -496,15 +496,10 @@ export class NumericInput extends React.Component
      */
     _format(n: number): string
     {
-
         let _n = this._toNumber(n).toFixed(this.props.precision);
-
         if (this.props.format) {
             return this.props.format(_n);
         }
-
-        console.log(`formatted: ${_n}`)
-
         return _n;
     }
 
@@ -514,11 +509,13 @@ export class NumericInput extends React.Component
      */
     _step(n: number, callback): boolean
     {
+        this.refs.input.getDOMNode().focus()
+        let _current = isNaN(this.state.value) ? this._parse(this.state.value) : this.state.value
         let _n = this._toNumber(
-            (this.state.value || 0) + this.props.step * n
+            (_current || 0) + this.props.step * n
         );
 
-        if (_n !== this.state.value) {
+        if (_n !== _current) {
             this.setState({ value: _n }, callback);
         }
     }
@@ -530,7 +527,6 @@ export class NumericInput extends React.Component
      */
     _onChange(e: Event): void
     {
-        console.log(`changed value: ${e.target.value}`)
         this.setState({
             // value: this._parse(e.target.value)
             value: e.target.value
@@ -540,7 +536,6 @@ export class NumericInput extends React.Component
     _onBlur(e: Event): void
     {
       let val = this._format(this._parse(e.target.value))
-      console.log(`value: ${val}`)
       this.setState({
         value: val
       })
