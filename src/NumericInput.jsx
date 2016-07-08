@@ -510,6 +510,7 @@ export class NumericInput extends React.Component
     _step(n: number, callback): boolean
     {
         this.refs.input.getDOMNode().focus()
+        console.log(`stepping before ${this.state.value}`)
         let _current = isNaN(this.state.value) ? this._parse(this.state.value) : this.state.value
         let _n = this._toNumber(
             (_current || 0) + this.props.step * n
@@ -518,6 +519,7 @@ export class NumericInput extends React.Component
         if (_n !== _current) {
             this.setState({ value: _n }, callback);
         }
+        console.log(`stepping after ${_n}`)
     }
 
     /**
