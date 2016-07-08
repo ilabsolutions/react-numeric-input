@@ -399,7 +399,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function _step(n, callback) {
 	            this.refs.input.getDOMNode().focus();
 	            console.log("stepping before " + this.state.value);
-	            var _current = isNaN(this.state.value) ? this._parse(this.state.value) : this.state.value;
+	            var needsParsing = isNaN(this.state.value) || typeof this.state.value === 'string';
+	            var _current = needsParsing ? this._parse(this.state.value) : this.state.value;
 	            var _n = this._toNumber((_current || 0) + this.props.step * n);
 
 	            if (_n !== _current) {
