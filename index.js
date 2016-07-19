@@ -248,7 +248,7 @@ module.exports =
 	            if (typeof this.props.parse == 'function') {
 	                return parseFloat(this.props.parse(x));
 	            }
-	            return parseFloat(x);
+	            return parseFloat(x).toFixed(2);
 	        }
 	    }, {
 	        key: "_format",
@@ -277,7 +277,7 @@ module.exports =
 	        key: "_onChange",
 	        value: function _onChange(e) {
 	            this.setState({
-	                value: e.target.value
+	                value: parseFloat(e.target.value).toFixed(2)
 	            });
 	        }
 	    }, {
@@ -285,7 +285,7 @@ module.exports =
 	        value: function _onBlur(e) {
 	            var val = this._format(this._parse(e.target.value));
 	            this.setState({
-	                value: val
+	                value: parseFloat(val).toFixed(2)
 	            });
 	        }
 	    }, {
