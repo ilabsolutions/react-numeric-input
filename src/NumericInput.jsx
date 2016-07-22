@@ -463,7 +463,7 @@ export class NumericInput extends React.Component
      */
     _toNumber(x: any): number
     {
-        let n = parseFloat(x);
+        let n = parseFloat(x).toFixed(2);
         let q = Math.pow(10, this.props.precision);
         if (isNaN(n) || !isFinite(n)) {
             n = 0;
@@ -484,9 +484,9 @@ export class NumericInput extends React.Component
     _parse(x: string): number
     {
         if (typeof this.props.parse == 'function') {
-            return parseFloat(this.props.parse(x));
+            return parseFloat(this.props.parse(x)).toFixed(2);
         }
-        return parseFloat(x);
+        return parseFloat(x).toFixed(2);
     }
 
     /**
