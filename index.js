@@ -231,7 +231,7 @@ module.exports =
 	    }, {
 	        key: "_toNumber",
 	        value: function _toNumber(x) {
-	            var n = parseFloat(x);
+	            var n = parseFloat(x).toFixed(2);
 	            var q = Math.pow(10, this.props.precision);
 	            if (isNaN(n) || !isFinite(n)) {
 	                n = 0;
@@ -246,7 +246,7 @@ module.exports =
 	        key: "_parse",
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
-	                return parseFloat(this.props.parse(x));
+	                return parseFloat(this.props.parse(x)).toFixed(2);
 	            }
 	            return parseFloat(x).toFixed(2);
 	        }
@@ -277,7 +277,7 @@ module.exports =
 	        key: "_onChange",
 	        value: function _onChange(e) {
 	            this.setState({
-	                value: parseFloat(e.target.value).toFixed(2)
+	                value: e.target.value
 	            });
 	        }
 	    }, {
@@ -285,7 +285,7 @@ module.exports =
 	        value: function _onBlur(e) {
 	            var val = this._format(this._parse(e.target.value));
 	            this.setState({
-	                value: parseFloat(val).toFixed(2)
+	                value: val
 	            });
 	        }
 	    }, {
