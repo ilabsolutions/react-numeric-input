@@ -72,7 +72,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// import NumericInput from '../index.js';
 
-
 	$(function () {
 	    $('script.jsx').each(function (i, s) {
 	        var div = $('<div/>'),
@@ -139,6 +138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        // var that = this;
+
 	        var _this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Demo)).call.apply(_Object$getPrototypeO, [this].concat(args)));
 
 	        _this.state = {

@@ -69,6 +69,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _objectAssign = __webpack_require__(2);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -131,6 +135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * The deault behaviour is to start from 0, use step of 1 and display
 	     * integers
 	     */
+
 	    function NumericInput(props) {
 	        _classCallCheck(this, NumericInput);
 
@@ -169,6 +174,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * When click and hold on a button - the delay before auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
+	    //,
+	    // noValidate: false
 
 
 	    /**
@@ -602,11 +609,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // Build the styles
 	            for (var x in NumericInput.style) {
-	                css[x] = Object.assign({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
+	                css[x] = (0, _objectAssign2.default)({}, NumericInput.style[x], props.style ? props.style[x] || {} : {});
 	            }
 
 	            var _props = this.props;
-	            var step = _props.step;
+	            var
+	            // These are ignored in rendering
+	            step = _props.step;
 	            var min = _props.min;
 	            var max = _props.max;
 	            var precision = _props.precision;
@@ -636,13 +645,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                input: _extends({
 	                    ref: 'input',
 	                    type: 'text',
-	                    style: Object.assign({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
+	                    style: (0, _objectAssign2.default)({}, css.input, !hasFormControl ? css['input:not(.form-control)'] : {}, state.inputFocus ? css['input:focus'] : {})
 	                }, rest),
 	                btnUp: {
-	                    style: Object.assign({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
+	                    style: (0, _objectAssign2.default)({}, css.btn, css.btnUp, props.disabled ? css['btn:disabled'] : state.btnUpActive ? css['btn:active'] : state.btnUpHover ? css['btn:hover'] : {})
 	                },
 	                btnDown: {
-	                    style: Object.assign({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
+	                    style: (0, _objectAssign2.default)({}, css.btn, css.btnDown, props.disabled ? css['btn:disabled'] : state.btnDownActive ? css['btn:active'] : state.btnDownHover ? css['btn:hover'] : {})
 	                }
 	            };
 
@@ -652,24 +661,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            if (hasFormControl) {
-	                Object.assign(attrs.wrap.style, css['wrap.hasFormControl']);
+	                (0, _objectAssign2.default)(attrs.wrap.style, css['wrap.hasFormControl']);
 	            }
 
 	            // mobile
 	            if (mobile) {
-	                Object.assign(attrs.input.style, css['input.mobile']);
-	                Object.assign(attrs.btnUp.style, css['btnUp.mobile']);
-	                Object.assign(attrs.btnDown.style, css['btnDown.mobile']);
+	                (0, _objectAssign2.default)(attrs.input.style, css['input.mobile']);
+	                (0, _objectAssign2.default)(attrs.btnUp.style, css['btnUp.mobile']);
+	                (0, _objectAssign2.default)(attrs.btnDown.style, css['btnDown.mobile']);
 	            }
 
 	            // Attach event listeners if the widget is not disabled
 	            if (!props.disabled) {
-	                Object.assign(attrs.wrap, {
+	                (0, _objectAssign2.default)(attrs.wrap, {
 	                    onMouseUp: this.stop,
 	                    onMouseLeave: this.stop
 	                });
 
-	                Object.assign(attrs.btnUp, {
+	                (0, _objectAssign2.default)(attrs.btnUp, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'up'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -707,7 +716,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.btnDown, {
+	                (0, _objectAssign2.default)(attrs.btnDown, {
 	                    onTouchStart: this.onTouchStart.bind(this, 'down'),
 	                    onTouchEnd: this.stop,
 	                    onMouseEnter: function onMouseEnter() {
@@ -745,7 +754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                });
 
-	                Object.assign(attrs.input, {
+	                (0, _objectAssign2.default)(attrs.input, {
 	                    onChange: this._onChange.bind(this),
 	                    onKeyDown: this._onKeyDown.bind(this),
 	                    onInput: this._onSelectionChange.bind(this),
@@ -768,7 +777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    onBlur: this._onBlur.bind(this)
 	                });
 	            } else {
-	                Object.assign(attrs.input.style, css['input:disabled']);
+	                (0, _objectAssign2.default)(attrs.input.style, css['input:disabled']);
 	            }
 
 	            if (mobile) {
@@ -856,9 +865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    format: null,
 	    // className : '',
 	    mobile: 'auto',
-	    style: {} //,
-	    // noValidate: false
-	};
+	    style: {} };
 	NumericInput.style = {
 
 	    // The wrapper (span)
@@ -1019,6 +1026,95 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+	/* eslint-disable no-unused-vars */
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (e) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
 
 /***/ }
 /******/ ])

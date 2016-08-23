@@ -1,4 +1,5 @@
 import React from "react";
+import assign from "object-assign";
 const PropTypes = React.PropTypes
 const KEYCODE_UP   = 38;
 const KEYCODE_DOWN = 40;
@@ -688,7 +689,7 @@ export class NumericInput extends React.Component
 
         // Build the styles
         for (let x in NumericInput.style) {
-            css[x] = Object.assign(
+            css[x] = assign(
                 {},
                 NumericInput.style[x],
                 props.style ? props.style[x] || {} : {}
@@ -725,7 +726,7 @@ export class NumericInput extends React.Component
             input : {
                 ref: 'input',
                 type: 'text',
-                style: Object.assign(
+                style: assign(
                     {},
                     css.input,
                     !hasFormControl ?
@@ -736,7 +737,7 @@ export class NumericInput extends React.Component
                 ...rest
             },
             btnUp: {
-                style: Object.assign(
+                style: assign(
                     {},
                     css.btn,
                     css.btnUp,
@@ -750,7 +751,7 @@ export class NumericInput extends React.Component
                 )
             },
             btnDown: {
-                style: Object.assign(
+                style: assign(
                     {},
                     css.btn,
                     css.btnDown,
@@ -771,24 +772,24 @@ export class NumericInput extends React.Component
         }
 
         if (hasFormControl) {
-            Object.assign(attrs.wrap.style, css['wrap.hasFormControl'])
+            assign(attrs.wrap.style, css['wrap.hasFormControl'])
         }
 
         // mobile
         if (mobile) {
-            Object.assign(attrs.input  .style, css['input.mobile'  ])
-            Object.assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
-            Object.assign(attrs.btnDown.style, css['btnDown.mobile'])
+            assign(attrs.input  .style, css['input.mobile'  ])
+            assign(attrs.btnUp  .style, css['btnUp.mobile'  ])
+            assign(attrs.btnDown.style, css['btnDown.mobile'])
         }
 
         // Attach event listeners if the widget is not disabled
         if (!props.disabled) {
-            Object.assign(attrs.wrap, {
+            assign(attrs.wrap, {
                 onMouseUp    : this.stop,
                 onMouseLeave : this.stop
             });
 
-            Object.assign(attrs.btnUp, {
+            assign(attrs.btnUp, {
                 onTouchStart: this.onTouchStart.bind(this, 'up'),
                 onTouchEnd: this.stop,
                 onMouseEnter: () => {
@@ -822,7 +823,7 @@ export class NumericInput extends React.Component
                 }
             });
 
-            Object.assign(attrs.btnDown, {
+            assign(attrs.btnDown, {
                 onTouchStart: this.onTouchStart.bind(this, 'down'),
                 onTouchEnd: this.stop,
                 onMouseEnter: () => {
@@ -856,7 +857,7 @@ export class NumericInput extends React.Component
                 }
             });
 
-            Object.assign(attrs.input, {
+            assign(attrs.input, {
                 onChange : this._onChange.bind(this),
                 onKeyDown: this._onKeyDown.bind(this),
                 onInput: this._onSelectionChange.bind(this),
@@ -876,7 +877,7 @@ export class NumericInput extends React.Component
             });
         }
         else {
-            Object.assign(attrs.input.style, css['input:disabled'])
+            assign(attrs.input.style, css['input:disabled'])
         }
 
         if (mobile) {
