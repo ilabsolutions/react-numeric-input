@@ -131,7 +131,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * The deault behaviour is to start from 0, use step of 1 and display
 	     * integers
 	     */
-
 	    function NumericInput(props) {
 	        _classCallCheck(this, NumericInput);
 
@@ -170,8 +169,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * When click and hold on a button - the delay before auto changin the value.
 	     * This is a static property and can be modified if needed.
 	     */
-	    //,
-	    // noValidate: false
 
 
 	    /**
@@ -345,7 +342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "_toNumber",
 	        value: function _toNumber(x) {
-	            var n = parseFloat(x);
+	            var n = parseFloat(x).toFixed(2);
 	            var q = Math.pow(10, this.props.precision);
 	            if (isNaN(n) || !isFinite(n)) {
 	                n = 0;
@@ -368,9 +365,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "_parse",
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
-	                return parseFloat(this.props.parse(x));
+	                return parseFloat(this.props.parse(x)).toFixed(2);
 	            }
-	            return parseFloat(x);
+	            return parseFloat(x).toFixed(2);
 	        }
 
 	        /**
@@ -609,9 +606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 
 	            var _props = this.props;
-	            var
-	            // These are ignored in rendering
-	            step = _props.step;
+	            var step = _props.step;
 	            var min = _props.min;
 	            var max = _props.max;
 	            var precision = _props.precision;
@@ -861,7 +856,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    format: null,
 	    // className : '',
 	    mobile: 'auto',
-	    style: {} };
+	    style: {} //,
+	    // noValidate: false
+	};
 	NumericInput.style = {
 
 	    // The wrapper (span)

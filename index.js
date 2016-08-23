@@ -231,7 +231,7 @@ module.exports =
 	    }, {
 	        key: "_toNumber",
 	        value: function _toNumber(x) {
-	            var n = parseFloat(x);
+	            var n = parseFloat(x).toFixed(2);
 	            var q = Math.pow(10, this.props.precision);
 	            if (isNaN(n) || !isFinite(n)) {
 	                n = 0;
@@ -246,9 +246,9 @@ module.exports =
 	        key: "_parse",
 	        value: function _parse(x) {
 	            if (typeof this.props.parse == 'function') {
-	                return parseFloat(this.props.parse(x));
+	                return parseFloat(this.props.parse(x)).toFixed(2);
 	            }
-	            return parseFloat(x);
+	            return parseFloat(x).toFixed(2);
 	        }
 	    }, {
 	        key: "_format",
